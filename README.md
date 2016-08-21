@@ -1,0 +1,2 @@
+# CSharedPreferences
+一个C#编写的SharedPreferences封装库，可以方便的进行数据的持久化保存
