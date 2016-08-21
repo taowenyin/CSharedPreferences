@@ -1,2 +1,3 @@
-# CSharedPreferences
-一个C#编写的SharedPreferences封装库，可以方便的进行数据的持久化保存
+# 欢迎使用.Net平台上最简单的SharedPreferences封装类
+
+[![Build Status](https://travis-ci.org/taowenyin/CSharedPreferences.svg?branch=master)](https://travis-ci.org/taowenyin/CSharedPreferences)

@@ -1,0 +1,20 @@
+version: alpha_v0.{build}
+configuration: Release
+before_build:
+- ps: >-
+    nuget restore
+build:
+  verbosity: minimal
+artifacts:
+- path: CSharedPreferences\bin\Release
+  name: csharedpreferences_$(appveyor_build_version)
+deploy:
+- provider: GitHub
+  tag: $(appveyor_build_version)
+  release: csharedpreferences_$(appveyor_build_version)
+  auth_token:
+    secure: suCkyLyNzRHvwL46/CXjLdTJukroztvH+omv/KtZgW7cpoi8BhvAsgAwkEy1uBER
+  artifact: csharedpreferences_$(appveyor_build_version)
+  draft: true
+  prerelease: false
+  force_update: true
