@@ -61,6 +61,14 @@ namespace CSharedPreferences
         IEditor PutString(string key, string value);
 
         /// <summary>
+        /// 向SharesPreference添加Double类型的值
+        /// </summary>
+        /// <param name="key">Double类型的Key</param>
+        /// <param name="value">Double类型的值</param>
+        /// <returns>IEditor对象</returns>
+        IEditor PutDouble(string key, double value);
+
+        /// <summary>
         /// 移除对应Key的值
         /// </summary>
         /// <param name="key">要移除的Key</param>

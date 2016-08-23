@@ -1,5 +1,10 @@
-﻿using System;
+﻿using CSharedPreferences.Common;
+using CSharedPreferences.Editor;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,11 +14,34 @@ namespace CSharedPreferences
     public class SharedPreferences
     {
         private static SharedPreferences instance = null;
+
         private string sharedPrefName = null;
+        private JObject sharedPref = null;
 
         private SharedPreferences(string name)
         {
-            this.sharedPrefName = name;
+            string preferencesPath = Path.Combine(Environment.CurrentDirectory, 
+                Preferences.SHARE_PREF_DIR, name + Preferences.SHARE_PREF_SUFFIX);
+            sharedPrefName = name;
+
+            if(File.Exists(preferencesPath))
+            {
+                string jsonText = File.ReadAllText(preferencesPath, Encoding.UTF8);
+                sharedPref = JObject.Parse(jsonText);
+            }
+            else
+            {
+                sharedPref = new JObject();
+            }
+        }
+
+        /// <summary>
+        /// 获取SharedPreferences文件名
+        /// </summary>
+        /// <returns>SharedPreferences文件名</returns>
+        public string getSharedPrefName()
+        {
+            return this.sharedPrefName;
         }
 
         /// <summary>
@@ -38,7 +66,12 @@ namespace CSharedPreferences
         /// <returns>Ture：表示Key存在，False：表示Key不存在</returns>
         public bool Contains(string key)
         {
-            return false;
+            if(sharedPref.SelectToken(key) == null)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -47,7 +80,7 @@ namespace CSharedPreferences
         /// <returns>Editor对象</returns>
         public IEditor GetEditor()
         {
-            return null;
+            return new SimpleEditor(sharedPref, this);
         }
 
         /// <summary>
@@ -58,6 +91,11 @@ namespace CSharedPreferences
         /// <returns>Key对应的值</returns>
         public bool GetBoolean(string key, bool defValue)
         {
+            if(Contains(key))
+            {
+                return (bool)(sharedPref[key]);
+            }
+
             return defValue;
         }
 
@@ -69,6 +107,11 @@ namespace CSharedPreferences
         /// <returns>Key对应的值</returns>
         public float GetFloat(string key, float defValue)
         {
+            if (Contains(key))
+            {
+                return (float)(sharedPref[key]);
+            }
+
             return defValue;
         }
 
@@ -80,6 +123,11 @@ namespace CSharedPreferences
         /// <returns>Key对应的值</returns>
         public int GetInt(string key, int defValue)
         {
+            if (Contains(key))
+            {
+                return (int)(sharedPref[key]);
+            }
+
             return defValue;
         }
 
@@ -91,6 +139,27 @@ namespace CSharedPreferences
         /// <returns>Key对应的值</returns>
         public long GetLong(string key, long defValue)
         {
+            if (Contains(key))
+            {
+                return (long)(sharedPref[key]);
+            }
+
+            return defValue;
+        }
+
+        /// <summary>
+        /// 获取Double类型的Key值
+        /// </summary>
+        /// <param name="key">检索的Key值</param>
+        /// <param name="defValue">如果Key不存在，则使用的默认值</param>
+        /// <returns>Key对应的值</returns>
+        public double GetDouble(string key, double defValue)
+        {
+            if (Contains(key))
+            {
+                return (double)(sharedPref[key]);
+            }
+
             return defValue;
         }
 
@@ -102,16 +171,12 @@ namespace CSharedPreferences
         /// <returns>Key对应的值</returns>
         public string GetString(string key, string defValue)
         {
-            return defValue;
-        }
+            if (Contains(key))
+            {
+                return (string)(sharedPref[key]);
+            }
 
-        /// <summary>
-        /// 获取SharedPreferences文件名
-        /// </summary>
-        /// <returns>SharedPreferences文件名</returns>
-        private string getSharedPrefName()
-        {
-            return this.sharedPrefName;
+            return defValue;
         }
     }
 }
