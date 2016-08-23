@@ -1,4 +1,4 @@
-version: beta_v0.{build}
+version: alpha_v0.{build}
 configuration: Release
 before_build:
 - ps: >-
